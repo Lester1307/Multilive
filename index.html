@@ -1,14 +1,4 @@
 <!DOCTYPE html>
-<html lang="en" >
-<head>
-  <meta charset="UTF-8">
-  <title>CodePen - Untitled</title>
-  
-
-</head>
-<body>
-<!-- partial:index.partial.html -->
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -42,13 +32,18 @@
             margin-bottom: 20px;
         }
 
+        /* Video Card */
+        .video-card {
+            margin-bottom: 40px;
+        }
+
         /* Video Player */
         .video-player {
             position: relative;
             padding-bottom: 56.25%; /* 16:9 */
             height: 0;
             overflow: hidden;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
@@ -61,11 +56,11 @@
             height: 100%;
         }
 
-        /* Highlights Section */
-        .highlights {
-            margin-top: 30px;
+        /* Video Title */
+        .video-title {
             font-size: 1.2em;
             color: #555;
+            margin-bottom: 20px;
         }
 
         /* Footer */
@@ -89,24 +84,28 @@
     <div class="container">
         <h1>Cricket Highlights</h1>
 
-        <!-- YouTube Video Player -->
-        <div class="video-player">
-            <iframe src="https://www.youtube.com/embed/ZT2ilX9MC1w" frameborder="0" allowfullscreen></iframe>
+        <!-- Video Card 1 -->
+        <div class="video-card">
+            <div class="video-player">
+                <iframe src="https://www.youtube.com/embed/zNnDssfrDKQ" frameborder="0" allowfullscreen></iframe>
+            </div>
+            <div class="video-title">England vs Australia Highlights</div>
         </div>
 
-        <div class="highlights">
-            <p>Enjoy the latest highlights from cricket matches!</p>
-            <p>Stay tuned for more exciting videos!</p>
+        <!-- Video Card 2 -->
+        <div class="video-card">
+            <div class="video-player">
+                <iframe src="https://www.youtube.com/embed/ZT2ilX9MC1w" frameborder="0" allowfullscreen></iframe>
+            </div>
+            <div class="video-title">India vs Newzealand </div>
         </div>
+
+        <!-- Add more video cards here -->
 
         <div class="footer">
             <p>&copy; 2024 Cricket Highlights. All rights reserved.</p>
-            <p>Powered by <a href="https://youtube.com">YouTube</a></p>
+            <p>Powered by <a href="https://t.me/+NFoX453eVVI4N2M1">FlickXDrive</a></p>
         </div>
     </div>
-</body>
-</html>
-<!-- partial -->
-  
 </body>
 </html>

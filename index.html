@@ -86,7 +86,7 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Language Drawer */
+        /* Match Dropdown */
         .dropdown-container {
             margin: 20px 0;
         }
@@ -132,19 +132,15 @@
 <body>
 
     <h1>Live Cricket Streaming</h1>
-    <h2> INDIA Vs BANGLADESH 3RD T20 HINDI </h2>
+    <h2>Select a Match to Watch</h2>
     
-    <!-- Language Selection Dropdown -->
+    <!-- Match Selection Dropdown -->
     <div class="dropdown-container">
-        <label for="language-select">Choose Language:</label>
-        <select id="language-select" class="dropdown">
-            <option value="https://prod-sports-hin-gm.jiocinema.com/hls/live/2100322/hd_akamai_iosmob_avc_hin_indvsban_121024/master.m3u8" selected>Hindi</option>
-            <option value="https://prod-sports-eng-gm.jiocinema.com/hls/live/2100297/hd_akamai_iosmob_avc_eng_indvsban_121024/master.m3u8">English</option>
-            <option value="https://prod-sports-south-gm.jiocinema.com/hls/live/2109711/hd_akamai_iosmob_avc_tam_indvsban_121024/master.m3u8">Tamil</option>
-            <option value="https://prod-sports-south-gm.jiocinema.com/hls/live/2109717/hd_akamai_iosmob_avc_tel_indvsban_121024/master.m3u8">Telugu</option>
-            <option value="https://prod-sports-north-gm.jiocinema.com/hls/live/2109761/hd_akamai_iosmob_avc_bhoj_indvsban_121024/master.m3u8">Bhojpuri</option>
-            <option value="https://prod-sports-south-gm.jiocinema.com/hls/live/2109723/hd_akamai_iosmob_avc_kan_indvsban_121024/master.m3u8">Kannada</option>
-            <option value="https://prod-sports-north-gm.jiocinema.com/hls/live/2109773/hd_akamai_iosmob_avc_ben_indvsban_121024/master.m3u8">Bengali</option>
+        <label for="match-select">Choose Match:</label>
+        <select id="match-select" class="dropdown">
+            <option value="https://prod-sports-eng-cf.jiocinema.com/hls/live/2100306/hd_akamai_merged_avc_eng_cricket_m1_181024/master.m3u8" selected>Delhi Vs Telangana</option>
+            <option value="https://prod-sports-eng-cf.jiocinema.com/hls/live/2100306/hd_akamai_merged_avc_eng_cricket_m3_181024/master.m3u8">Saurashtra Vs Chattisgarh</option>
+            <option value="https://prod-sports-eng-cf.jiocinema.com/hls/live/2100306/hd_akamai_merged_avc_eng_cricket_m2_181024/master.m3u8">Himachal Pradesh Vs Rajasthan</option>
         </select>
     </div>
 
@@ -153,7 +149,7 @@
             <div class="loader"></div>
         </div>
         <video id="live-stream" class="video-js vjs-default-skin" controls preload="auto" autoplay muted data-setup="{}">
-            <source id="video-source" src="https://prod-sports-hin-gm.jiocinema.com/hls/live/2100322/hd_akamai_iosmob_avc_hin_indvsban_121024/master.m3u8" type="application/x-mpegURL">
+            <source id="video-source" src="https://prod-sports-eng-cf.jiocinema.com/hls/live/2100306/hd_akamai_merged_avc_eng_cricket_m1_181024/master.m3u8" type="application/x-mpegURL">
             Your browser does not support HTML5 video.
         </video>
     </div>
@@ -172,7 +168,7 @@
         var loader = document.getElementById('loader');
         var player = videojs('live-stream');
         var videoSource = document.getElementById('video-source');
-        var languageSelect = document.getElementById('language-select');
+        var matchSelect = document.getElementById('match-select');
 
         player.ready(function() {
             loader.style.display = 'block'; // Show loader on ready
@@ -192,11 +188,11 @@
             alert('There was an error with the video stream. Please try again later.');
         });
 
-        // Change video source when language is selected
-        languageSelect.addEventListener('change', function() {
-            var selectedLanguage = this.value;
-            videoSource.src = selectedLanguage;
-            player.src({ type: 'application/x-mpegURL', src: selectedLanguage });
+        // Change video source when match is selected
+        matchSelect.addEventListener('change', function() {
+            var selectedMatch = this.value;
+            videoSource.src = selectedMatch;
+            player.src({ type: 'application/x-mpegURL', src: selectedMatch });
             player.play(); // Play new video after change
         });
     </script>

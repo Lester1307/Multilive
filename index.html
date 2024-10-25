@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live Cricket Streaming - Multi-Language</title>
+    <title>Live Cricket Streaming</title>
     <!-- Video.js CSS -->
     <link href="https://vjs.zencdn.net/7.21.0/video-js.css" rel="stylesheet"/>
     <style>
@@ -86,7 +86,7 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Language Dropdown */
+        /* Match Dropdown */
         .dropdown-container {
             margin: 20px 0;
         }
@@ -132,20 +132,19 @@
 <body>
 
     <h1>Live Cricket Streaming</h1>
-    <h2>Select a Language to Watch the Match</h2>
-    
-    <!-- Language Selection Dropdown -->
+    <h2>India vs New Zealand - 2nd Test - Day 2</h2>
+
+    <!-- Match Language Dropdown -->
     <div class="dropdown-container">
         <label for="language-select">Choose Language:</label>
         <select id="language-select" class="dropdown">
-            <option value="https://prod-sports-south-gm.jiocinema.com/hls/live/2109711/hd_akamai_iosmob_avc_tam_indvsnz_241024/master.m3u8">Tamil</option>
-            <option value="https://prod-sports-north-gm.jiocinema.com/hls/live/2109773/hd_akamai_iosmob_avc_ben_indvsnz_241024/master.m3u8">Bengali</option>
-            <option value="https://prod-sports-south-gm.jiocinema.com/hls/live/2109723/hd_akamai_iosmob_avc_kan_indvsnz_241024/master.m3u8">Kannada</option>
-            <option value="https://prod-sports-eng-cf.jiocinema.com:443/hls/live/2100299/hd_akamai_androidmob_avc_eng_indvsnz_241024/master_1080p.m3u8">English</option>
-            <option value="https://prod-sports-hin-cf.jiocinema.com:443/hls/live/2100323/hd_akamai_androidmob_avc_hin_indvsnz_241024/master_720p.m3u8" selected>Hindi</option>
-            <option value="https://prod-sports-south-gm.jiocinema.com/hls/live/2109699/hd_akamai_iosmob_avc_odia_indvsnz_241024/master.m3u8">Odia</option>
-            <option value="https://prod-sports-north-gm.jiocinema.com/hls/live/2109761/hd_akamai_iosmob_avc_bhoj_indvsnz_241024/master.m3u8">Bhojpuri</option>
-            <option value="https://prod-sports-south-gm.jiocinema.com/hls/live/2109717/hd_akamai_iosmob_avc_tel_indvsnz_241024/master.m3u8">Telugu</option>
+            <option value="https://prod-sports-hin-cf.jiocinema.com/hls/live/2100320/uhd_akamai_ctv_avc_hin_indvsnz_251024/index.m3u8" selected>Hindi</option>
+            <option value="https://prod-sports-eng-cf.jiocinema.com/hls/live/2100305/uhd_akamai_ctv_avc_eng_indvsnz_251024/index.m3u8">English</option>
+            <option value="https://prod-sports-north-cf.jiocinema.com/hls/live/2109771/uhd_akamai_ctv_avc_ben_indvsnz_251024/master.m3u8">Bengali</option>
+            <option value="https://prod-sports-south-gm.jiocinema.com/hls/live/2109721/uhd_akamai_ctv_avc_kan_indvsnz_251024/master.m3u8">Kannada</option>
+            <option value="https://prod-sports-south-cf.jiocinema.com/hls/live/2109709/uhd_akamai_ctv_avc_tam_indvsnz_251024/master.m3u8">Tamil</option>
+            <option value="https://prod-sports-north-gm.jiocinema.com/hls/live/2109758/uhd_akamai_ctv_avc_bhoj_indvsnz_251024/master.m3u8">Bhojpuri</option>
+            <option value="https://prod-sports-south-gm.jiocinema.com/hls/live/2109715/uhd_akamai_ctv_avc_tel_indvsnz_251024/master.m3u8">Telugu</option>
         </select>
     </div>
 
@@ -154,7 +153,7 @@
             <div class="loader"></div>
         </div>
         <video id="live-stream" class="video-js vjs-default-skin" controls preload="auto" autoplay muted data-setup="{}">
-            <source id="video-source" src="https://prod-sports-hin-cf.jiocinema.com:443/hls/live/2100323/hd_akamai_androidmob_avc_hin_indvsnz_241024/master_720p.m3u8" type="application/x-mpegURL">
+            <source id="video-source" src="https://prod-sports-hin-cf.jiocinema.com/hls/live/2100320/uhd_akamai_ctv_avc_hin_indvsnz_251024/index.m3u8" type="application/x-mpegURL">
             Your browser does not support HTML5 video.
         </video>
     </div>

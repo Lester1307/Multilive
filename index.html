@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>India vs South Africa - Live Streaming</title>
+    <title>IDFC FIRST Bank Ranji Trophy - Live Streaming</title>
     <!-- Video.js CSS -->
     <link href="https://vjs.zencdn.net/7.21.0/video-js.css" rel="stylesheet"/>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #4a90e2, #003366);
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
             color: #ffffff;
             margin: 0;
             padding: 0;
@@ -20,7 +20,7 @@
             text-align: center;
             color: #FFD700;
             margin: 30px 0;
-            font-size: 2.8em;
+            font-size: 2.5em;
             text-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
         }
 
@@ -59,7 +59,7 @@
         .dropdown {
             padding: 12px;
             font-size: 1em;
-            background-color: #00509E;
+            background-color: #003366;
             color: #ffffff;
             border: none;
             border-radius: 8px;
@@ -85,58 +85,44 @@
 </head>
 <body>
 
-    <h1>India vs South Africa - Live Streaming</h1>
+    <h1>IDFC FIRST Bank Ranji Trophy - Live Streaming</h1>
 
     <div class="main-content">
         <div class="dropdown-container">
-            <label for="language-select">Choose Match Feed:</label>
-            <select id="language-select" class="dropdown" onchange="changeLanguage(this.value)">
-                <option value="https://prod-sports-eng-cf.jiocinema.com/hls/live/2112598/uhdakamaictvavcssaispotindvssaengm1101124__5d882b6b-a27f-456c-bec2-abd8ed895cf2/master.m3u8" selected>
-                    English
+            <label for="match-select">Choose Match Feed:</label>
+            <select id="match-select" class="dropdown" onchange="changeMatch(this.value)">
+                <option value="https://prod-sports-eng-gm.jiocinema.com/hls/live/2100306/hd_akamai_merged_avc_eng_cricket_m1_141124/master.m3u8" selected>
+                    Vidarbha vs Gujarat
                 </option>
-                <option value="https://prod-sports-hin-cf.jiocinema.com/hls/live/2100324/uhdakamaictvavcssaispotindvssahinm1101124__5d882b6b-a27f-456c-bec2-abd8ed895cf2/master.m3u8">
-                    Hindi
+                <option value="https://prod-sports-eng-gm.jiocinema.com/hls/live/2100306/hd_akamai_merged_avc_eng_cricket_m2_141124/master.m3u8">
+                    Uttar Pradesh vs Karnataka
                 </option>
-                <option value="https://prod-sports-south-cf.jiocinema.com/hls/live/2109514/uhdakamaictvavcssaispotindvssaodiam1101124__5d882b6b-a27f-456c-bec2-abd8ed895cf2/master.m3u8">
-                    Haryanvi
-                </option>
-                <option value="https://prod-sports-north-gm.jiocinema.com/hls/live/2109729/uhdakamaictvavcssaispotindvssabhojm1101124__5d882b6b-a27f-456c-bec2-abd8ed895cf2/master.m3u8">
-                    Bhojpuri
-                </option>
-                <option value="https://prod-sports-south-cf.jiocinema.com/hls/live/2109685/uhdakamaictvavcssaispotindvssatelm1101124__5d882b6b-a27f-456c-bec2-abd8ed895cf2/master.m3u8">
-                    Telugu
-                </option>
-                <option value="https://prod-sports-south-cf.jiocinema.com/hls/live/2109679/uhdakamaictvavcssaispotindvssatamm1101124__5d882b6b-a27f-456c-bec2-abd8ed895cf2/master.m3u8">
-                    Tamil
-                </option>
-                <option value="https://prod-sports-south-gm.jiocinema.com/hls/live/2109691/uhdakamaictvavcssaispotindvssakanm1101124__5d882b6b-a27f-456c-bec2-abd8ed895cf2/master.m3u8">
-                    Bengali
-                </option>
-                <option value="https://prod-sports-south-gm.jiocinema.com/hls/live/2109691/uhdakamaictvavcssaispotindvssakanm1101124__5d882b6b-a27f-456c-bec2-abd8ed895cf2/master.m3u8">
-                    Kannada
+                <option value="https://prod-sports-eng-gm.jiocinema.com/hls/live/2100306/hd_akamai_merged_avc_eng_cricket_m3_141124/master.m3u8">
+                    Himachal Pradesh vs Pondicherry
                 </option>
             </select>
         </div>
         <div class="video-container">
             <video id="live-stream" class="video-js vjs-default-skin" controls preload="auto" autoplay muted data-setup="{}">
-                <source id="video-source" src="https://prod-sports-eng-cf.jiocinema.com/hls/live/2112598/uhdakamaictvavcssaispotindvssaengm1101124__5d882b6b-a27f-456c-bec2-abd8ed895cf2/master.m3u8" type="application/x-mpegURL">
+                <source id="video-source" src="https://prod-sports-eng-gm.jiocinema.com/hls/live/2100306/hd_akamai_merged_avc_eng_cricket_m1_141124/master.m3u8" type="application/x-mpegURL">
                 Your browser does not support HTML5 video.
             </video>
         </div>
     </div>
 
-    <footer>&copy; 2024 FlickXDrive. All rights reserved.</footer>
+    <footer>&copy; 2024 Ranji Trophy Live. All rights reserved.</footer>
 
     <!-- Video.js and JavaScript -->
     <script src="https://vjs.zencdn.net/7.21.0/video.min.js"></script>
     <script>
         var player = videojs('live-stream');
 
-        function changeLanguage(url) {
+        function changeMatch(url) {
             player.src({ type: 'application/x-mpegURL', src: url });
             player.play();
         }
 
+        // Play the default match on page load
         player.ready(function() {
             player.play();
         });

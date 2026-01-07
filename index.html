@@ -2,129 +2,280 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> IPL MEGA AUCTION 2025 - Live Streaming</title>
-    <!-- Video.js CSS -->
-    <link href="https://vjs.zencdn.net/7.21.0/video-js.css" rel="stylesheet"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Ultra Vision AI</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700&display=swap" rel="stylesheet">
+    
     <style>
+        :root {
+            --primary: #00f2ea;
+            --bg: #0f172a;
+            --glass: rgba(255, 255, 255, 0.1);
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #1e3c72, #2a5298);
-            color: #ffffff;
             margin: 0;
-            padding: 0;
-            overflow-x: hidden;
-        }
-
-        h1 {
-            text-align: center;
-            color: #FFD700;
-            margin: 30px 0;
-            font-size: 2.5em;
-            text-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-        }
-
-        .main-content {
+            background: var(--bg);
+            color: white;
+            font-family: 'Outfit', sans-serif;
+            overflow: hidden; /* Prevent scrolling */
             display: flex;
             flex-direction: column;
             align-items: center;
+            height: 100vh;
+        }
+
+        /* Camera Feed Layer */
+        #camera-view {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* UI Layer */
+        #ui-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            pointer-events: none; /* Let touches pass through to video */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* Header */
+        header {
             padding: 20px;
-        }
-
-        .video-container {
-            width: 100%;
-            max-width: 900px;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.8);
-            background-color: #222;
-            margin-top: 20px;
-        }
-
-        .video-js {
-            width: 100%;
-            height: 500px;
-        }
-
-        .dropdown-container {
-            margin-top: 20px;
+            background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, transparent 100%);
             text-align: center;
         }
 
-        .dropdown-container label {
-            font-size: 1.2em;
-            color: #FFD700;
+        h1 {
+            margin: 0;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--primary);
+            text-shadow: 0 0 10px var(--primary);
         }
 
-        .dropdown {
-            padding: 12px;
-            font-size: 1em;
-            background-color: #003366;
-            color: #ffffff;
-            border: none;
-            border-radius: 8px;
-            margin-left: 10px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
+        /* Info Card at Bottom */
+        #info-card {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(12px);
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding: 24px;
+            border-radius: 24px 24px 0 0;
+            transform: translateY(110%); /* Hidden by default */
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            pointer-events: auto;
+            max-height: 30vh;
+            overflow-y: auto;
         }
 
-        .dropdown:hover {
-            background-color: #FFD700;
-            color: #003366;
+        #info-card.active {
+            transform: translateY(0);
         }
 
-        footer {
-            text-align: center;
-            padding: 20px;
-            font-size: 0.9em;
-            color: #cccccc;
-            background: #003366;
-            margin-top: 20px;
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
         }
+
+        #object-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-transform: capitalize;
+            color: #fff;
+        }
+
+        #confidence-badge {
+            background: var(--primary);
+            color: #000;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.8rem;
+        }
+
+        #object-desc {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: #ccc;
+        }
+
+        /* Loading Spinner */
+        #loader {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            z-index: 20;
+        }
+
+        .spinner-ring {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255,255,255,0.1);
+            border-left-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        .hidden { opacity: 0; pointer-events: none; transition: opacity 0.5s; }
+
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"></script>
 </head>
 <body>
 
-    <h1>IPL MEGA AUCTION 2025 - Live Streaming</h1>
+    <div id="loader">
+        <div class="spinner-ring"></div>
+        <div style="font-weight: 500; letter-spacing: 1px;">Starting Neural Engine...</div>
+    </div>
 
-    <div class="main-content">
-        <div class="dropdown-container">
-            <label for="match-select">Choose Live Feed:</label>
-            <select id="match-select" class="dropdown" onchange="changeMatch(this.value)">
-                <option value="https://prod-sports-hin-gm.jiocinema.com/hls/live/2112605/uhd_akamai_ctv_avc_hin_ipl_auction_251124/master.m3u8" selected>
-                    Hindi 
-                </option>
-                <option value="https://prod-sports-eng-cf.jiocinema.com/hls/live/2112587/uhd_akamai_ctv_avc_eng_ipl_auction_251124/master.m3u8">
-                    English 
-                </option>
-           
-            </select>
-        </div>
-        <div class="video-container">
-            <video id="live-stream" class="video-js vjs-default-skin" controls preload="auto" autoplay muted data-setup="{}">
-                <source id="video-source" src="https://prod-sports-hin-gm.jiocinema.com/hls/live/2112605/uhd_akamai_ctv_avc_hin_ipl_auction_251124/master.m3u8" type="application/x-mpegURL">
-                Your browser does not support HTML5 video.
-            </video>
+    <div id="camera-view">
+        <video id="video" autoplay muted playsinline></video>
+        <canvas id="canvas"></canvas>
+    </div>
+
+    <div id="ui-layer">
+        <header>
+            <h1>Vision OS</h1>
+        </header>
+
+        <div id="info-card">
+            <div class="card-header">
+                <span id="object-name">Detecting...</span>
+                <span id="confidence-badge">0%</span>
+            </div>
+            <div id="object-desc">Point your camera at an object (Laptop, Cup, Person, etc.) to learn more.</div>
         </div>
     </div>
 
-    <footer>&copy; 2024 FlickxDrive. All rights reserved.</footer>
-
-    <!-- Video.js and JavaScript -->
-    <script src="https://vjs.zencdn.net/7.21.0/video.min.js"></script>
     <script>
-        var player = videojs('live-stream');
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const infoCard = document.getElementById('info-card');
+        const objectName = document.getElementById('object-name');
+        const objectDesc = document.getElementById('object-desc');
+        const confBadge = document.getElementById('confidence-badge');
+        const loader = document.getElementById('loader');
 
-        function changeMatch(url) {
-            player.src({ type: 'application/x-mpegURL', src: url });
-            player.play();
+        let model;
+        let lastSpeakTime = 0;
+        let currentObject = "";
+
+        // 1. Setup Camera (Environment/Rear Mode)
+        async function setupCamera() {
+            const stream = await navigator.mediaDevices.getUserMedia({
+                video: { facingMode: 'environment' },
+                audio: false
+            });
+            video.srcObject = stream;
+            return new Promise(resolve => {
+                video.onloadedmetadata = () => {
+                    canvas.width = video.videoWidth;
+                    canvas.height = video.videoHeight;
+                    resolve();
+                };
+            });
         }
 
-        // Play the default match on page load
-        player.ready(function() {
-            player.play();
-        });
-    </script>
+        // 2. Fetch Wikipedia Data
+        async function getWikiInfo(query) {
+            try {
+                const url = `https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro&explaintext&redirects=1&origin=*&titles=${query}`;
+                const res = await fetch(url);
+                const data = await res.json();
+                const pages = data.query.pages;
+                const pageId = Object.keys(pages)[0];
+                return pages[pageId].extract || "No details available.";
+            } catch (e) {
+                return "Could not connect to knowledge base.";
+            }
+        }
 
+        // 3. Main AI Loop
+        async function runAI() {
+            await setupCamera();
+            model = await cocoSsd.load();
+            loader.classList.add('hidden'); // Hide loader
+            
+            setInterval(detectFrame, 100); // Run detection every 100ms
+        }
+
+        async function detectFrame() {
+            const predictions = await model.detect(video);
+            
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.font = '16px sans-serif';
+            ctx.lineWidth = 4;
+
+            // Filter for high confidence (> 66%)
+            const strongPredictions = predictions.filter(p => p.score > 0.66);
+
+            if (strongPredictions.length > 0) {
+                // Pick the most confident object
+                const best = strongPredictions[0];
+                
+                // Draw Box
+                ctx.strokeStyle = '#00f2ea';
+                ctx.strokeRect(...best.bbox);
+                
+                // Update UI only if it's a new object
+                if (best.class !== currentObject) {
+                    currentObject = best.class;
+                    objectName.innerText = best.class;
+                    confBadge.innerText = Math.round(best.score * 100) + "%";
+                    
+                    // Show "Thinking..." then fetch Wiki
+                    objectDesc.innerText = "Accessing Neural Database...";
+                    infoCard.classList.add('active');
+                    
+                    const info = await getWikiInfo(best.class);
+                    // Cut text to 150 chars
+                    objectDesc.innerText = info.substring(0, 150) + "...";
+                }
+            } else {
+                // If nothing found for a while, hide card (optional logic)
+                // infoCard.classList.remove('active'); 
+            }
+        }
+
+        runAI();
+    </script>
 </body>
 </html>

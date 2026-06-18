@@ -1,360 +1,272 @@
-
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cinemax | Analytics Dashboard</title>
+    <title>Cinemax | All-In-One Hub</title>
+    <!-- Essential CDNs -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #09090b; color: #fafafa; }
-        .glass-card { background: rgba(18, 18, 21, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(39, 39, 42, 0.8); }
-        .accent-gradient { background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); }
-        .chart-container { position: relative; height: 260px; width: 100%; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #020617; color: #f8fafc; }
+        .glass { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(24px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        .aurora { position: fixed; inset: 0; z-index: -1; pointer-events: none; background: radial-gradient(circle at 0% 0%, #0f172a 0%, #020617 100%); }
+        .blob { position: absolute; width: 600px; height: 600px; filter: blur(120px); opacity: 0.15; border-radius: 50%; animation: float 20s infinite alternate; }
+        .blob-1 { background: #fbbf24; top: -10%; left: -5%; }
+        .blob-2 { background: #8b5cf6; bottom: -10%; right: -5%; animation-delay: -5s; }
+        @keyframes float { from { transform: translate(0,0) scale(1); } to { transform: translate(12%, 12%) scale(1.1); } }
         
-        /* Custom scrollbar for sidebar */
-        .custom-scroll::-webkit-scrollbar { width: 4px; }
-        .custom-scroll::-webkit-scrollbar-thumb { background: #27272a; border-radius: 10px; }
+        select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23fbbf24'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 1.2rem center; background-size: 1.2rem; }
+        
+        .chart-box { position: relative; height: 320px; width: 100%; }
+        .radar-box { position: relative; height: 380px; width: 100%; }
+        
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
+        
+        /* Smooth progress bar transitions */
+        .progress-bar { transition: width 1s cubic-bezier(0.4, 0, 0.2, 1); }
     </style>
 </head>
-<body class="flex min-h-screen overflow-x-hidden">
+<body class="p-4 md:p-10 lg:px-20 pb-32">
 
-    <!-- Sidebar -->
-    <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-zinc-950 border-r border-zinc-900 transition-transform -translate-x-full lg:translate-x-0">
-        <div class="flex flex-col h-full p-6">
-            <div class="flex items-center gap-2 mb-10">
-                <div class="accent-gradient p-2 rounded-lg">
-                    <i data-lucide="clapperboard" class="text-zinc-950 w-6 h-6"></i>
-                </div>
-                <h1 class="text-2xl font-bold tracking-tighter">CINEMAX</h1>
+    <div class="aurora">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
+
+    <!-- Header Section -->
+    <header class="flex flex-col lg:flex-row lg:items-center justify-between gap-8 mb-14">
+        <div class="flex items-center gap-5">
+            <div class="bg-amber-400 p-3 rounded-2xl shadow-lg shadow-amber-400/20">
+                <i data-lucide="clapperboard" class="text-slate-900 w-8 h-8"></i>
             </div>
-
-            <nav class="flex-1 space-y-1 custom-scroll overflow-y-auto">
-                <p class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest px-3 mb-4">Core</p>
-                <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-amber-500/10 text-amber-500 font-medium border border-amber-500/20">
-                    <i data-lucide="bar-chart-3" class="w-5 h-5"></i> Analytics
-                </a>
-                <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-zinc-400 hover:bg-zinc-900 hover:text-white transition-all">
-                    <i data-lucide="film" class="w-5 h-5"></i> Content
-                </a>
-                <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-zinc-400 hover:bg-zinc-900 hover:text-white transition-all">
-                    <i data-lucide="users" class="w-5 h-5"></i> Community
-                </a>
-                
-                <p class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest px-3 mb-4 mt-8">Settings</p>
-                <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-zinc-400 hover:bg-zinc-900 hover:text-white transition-all">
-                    <i data-lucide="shield-check" class="w-5 h-5"></i> Moderation
-                </a>
-                <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-zinc-400 hover:bg-zinc-900 hover:text-white transition-all">
-                    <i data-lucide="settings" class="w-5 h-5"></i> Preferences
-                </a>
-            </nav>
-
-            <div class="pt-6 border-t border-zinc-900">
-                <div class="flex items-center gap-3 p-2">
-                    <img src="https://ui-avatars.com/api/?name=Cinemax+Admin&background=27272a&color=fff" class="w-9 h-9 rounded-full">
-                    <div class="overflow-hidden">
-                        <p class="text-sm font-bold truncate">Admin Chief</p>
-                        <p class="text-[10px] text-zinc-500 uppercase">System Manager</p>
-                    </div>
-                </div>
+            <div>
+                <h1 class="text-4xl font-black tracking-tight">Intelligence <span class="text-amber-400 font-extrabold italic">PRO</span></h1>
+                <p class="text-slate-500 font-medium">Global analytics synchronized for <span id="timeLabel" class="text-white font-bold underline decoration-amber-400">Monthly</span> metrics.</p>
             </div>
         </div>
-    </aside>
-
-    <!-- Main Content -->
-    <main class="flex-1 lg:ml-64 p-4 md:p-8">
         
-        <!-- Header -->
-        <header class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
-            <div class="flex items-center gap-3">
-                <button id="menuBtn" class="lg:hidden p-2 bg-zinc-900 rounded-lg text-zinc-400">
-                    <i data-lucide="menu" class="w-6 h-6"></i>
-                </button>
-                <div>
-                    <h2 class="text-2xl font-bold">Analytics Dashboard</h2>
-                    <p class="text-zinc-500 text-sm">Real-time performance of the Cinemax platform.</p>
-                </div>
-            </div>
-            <div class="flex items-center gap-3">
-                <div class="flex items-center gap-2 px-3 py-2 bg-zinc-900 border border-zinc-800 rounded-xl">
-                    <i data-lucide="calendar" class="w-4 h-4 text-zinc-500"></i>
-                    <span class="text-xs font-medium">Last 30 Days</span>
-                    <i data-lucide="chevron-down" class="w-3 h-3 text-zinc-500"></i>
-                </div>
-                <button class="accent-gradient text-zinc-950 font-bold px-4 py-2 rounded-xl text-xs hover:shadow-[0_0_20px_rgba(245,158,11,0.3)] transition-all">
-                    Download Report
-                </button>
-            </div>
-        </header>
+        <select id="masterTimeSwitcher" onchange="syncEverything(this.value)" class="min-w-[280px] glass bg-slate-900/60 text-white text-sm font-bold px-8 py-5 rounded-2xl outline-none border border-white/10 hover:border-amber-400 transition-all shadow-2xl cursor-pointer">
+            <option value="weekly">Weekly Pulse</option>
+            <option value="biweekly">Bi-Weekly Split</option>
+            <option value="monthly" selected>Monthly Analysis</option>
+            <option value="yearly">Yearly Trajectory</option>
+        </select>
+    </header>
 
-        <!-- Top Metrics -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <div class="glass-card p-5 rounded-3xl">
-                <div class="flex justify-between items-start mb-4">
-                    <div class="p-2 bg-amber-500/10 rounded-lg text-amber-500">
-                        <i data-lucide="trending-up" class="w-5 h-5"></i>
-                    </div>
-                    <span class="text-[10px] bg-green-500/10 text-green-500 px-2 py-0.5 rounded-full font-bold">+14%</span>
-                </div>
-                <p class="text-zinc-500 text-xs font-semibold uppercase tracking-wider">Daily Active Users</p>
-                <h3 class="text-2xl font-bold mt-1">42.8k</h3>
-            </div>
-            <div class="glass-card p-5 rounded-3xl">
-                <div class="flex justify-between items-start mb-4">
-                    <div class="p-2 bg-blue-500/10 rounded-lg text-blue-500">
-                        <i data-lucide="star" class="w-5 h-5"></i>
-                    </div>
-                    <span class="text-[10px] bg-green-500/10 text-green-500 px-2 py-0.5 rounded-full font-bold">+8%</span>
-                </div>
-                <p class="text-zinc-500 text-xs font-semibold uppercase tracking-wider">Average Rating</p>
-                <h3 class="text-2xl font-bold mt-1">4.72</h3>
-            </div>
-            <div class="glass-card p-5 rounded-3xl">
-                <div class="flex justify-between items-start mb-4">
-                    <div class="p-2 bg-purple-500/10 rounded-lg text-purple-500">
-                        <i data-lucide="clock" class="w-5 h-5"></i>
-                    </div>
-                    <span class="text-[10px] bg-red-500/10 text-red-500 px-2 py-0.5 rounded-full font-bold">-2%</span>
-                </div>
-                <p class="text-zinc-500 text-xs font-semibold uppercase tracking-wider">Avg. Session</p>
-                <h3 class="text-2xl font-bold mt-1">18m 42s</h3>
-            </div>
-            <div class="glass-card p-5 rounded-3xl">
-                <div class="flex justify-between items-start mb-4">
-                    <div class="p-2 bg-emerald-500/10 rounded-lg text-emerald-500">
-                        <i data-lucide="dollar-sign" class="w-5 h-5"></i>
-                    </div>
-                    <span class="text-[10px] bg-green-500/10 text-green-500 px-2 py-0.5 rounded-full font-bold">+21%</span>
-                </div>
-                <p class="text-zinc-500 text-xs font-semibold uppercase tracking-wider">Ad Revenue</p>
-                <h3 class="text-2xl font-bold mt-1">$12,450</h3>
-            </div>
+    <!-- SECTION 1: CORE CARDS -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 mb-10" id="statCards">
+        <!-- JS Injected -->
+    </div>
+
+    <!-- SECTION 2: PERFORMANCE -->
+    <div class="grid grid-cols-1 xl:grid-cols-3 gap-8 mb-10">
+        <div class="xl:col-span-2 glass p-10 rounded-[3.5rem]">
+            <h4 class="text-2xl font-black mb-10 tracking-tight">Performance Momentum</h4>
+            <div class="chart-box"><canvas id="canvas-main"></canvas></div>
         </div>
-
-        <!-- Charts Grid -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
-            
-            <!-- Activity Line Chart -->
-            <div class="lg:col-span-2 glass-card p-6 rounded-3xl">
-                <div class="flex justify-between items-center mb-6">
-                    <div>
-                        <h4 class="text-lg font-bold">Platform Activity</h4>
-                        <p class="text-xs text-zinc-500">Total reviews and impressions per month</p>
-                    </div>
-                    <div class="flex gap-2">
-                        <span class="flex items-center gap-1.5 text-[10px] text-zinc-400">
-                            <span class="w-2 h-2 rounded-full bg-amber-500"></span> Reviews
-                        </span>
-                        <span class="flex items-center gap-1.5 text-[10px] text-zinc-400">
-                            <span class="w-2 h-2 rounded-full bg-zinc-600"></span> Views
-                        </span>
-                    </div>
-                </div>
-                <div class="chart-container">
-                    <canvas id="activityChart"></canvas>
-                </div>
-            </div>
-
-            <!-- Genre Pie Chart -->
-            <div class="glass-card p-6 rounded-3xl">
-                <h4 class="text-lg font-bold mb-1">Genre Distribution</h4>
-                <p class="text-xs text-zinc-500 mb-6">Most reviewed categories</p>
-                <div class="chart-container flex items-center justify-center">
-                    <canvas id="genreChart"></canvas>
-                </div>
-            </div>
-
+        <div class="glass p-10 rounded-[3.5rem]">
+            <h4 class="text-2xl font-black mb-10 tracking-tight">Trending Vault</h4>
+            <div id="vaultList" class="space-y-4"></div>
         </div>
+    </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            
-            <!-- Device Performance Bar Chart -->
-            <div class="glass-card p-6 rounded-3xl">
-                <h4 class="text-lg font-bold mb-1">Device Distribution</h4>
-                <p class="text-xs text-zinc-500 mb-6">User access points</p>
-                <div class="chart-container">
-                    <canvas id="deviceChart"></canvas>
-                </div>
-            </div>
-
-            <!-- Recent Content List -->
-            <div class="glass-card p-6 rounded-3xl">
-                <div class="flex justify-between items-center mb-6">
-                    <h4 class="text-lg font-bold">Top Performing Titles</h4>
-                    <button class="text-xs text-amber-500 font-bold hover:underline">View All</button>
-                </div>
-                <div class="space-y-4">
-                    <div class="flex items-center justify-between p-3 bg-zinc-900/40 rounded-2xl border border-zinc-800/50">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-14 bg-zinc-800 rounded-lg overflow-hidden flex-shrink-0">
-                                <img src="https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?auto=format&fit=crop&q=80&w=100" class="w-full h-full object-cover">
-                            </div>
-                            <div>
-                                <p class="text-sm font-bold">Interstellar</p>
-                                <p class="text-[10px] text-zinc-500">2.4k Reviews • Sci-Fi</p>
-                            </div>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-xs font-bold text-amber-500">9.4/10</p>
-                            <p class="text-[10px] text-green-500">+12% Trending</p>
-                        </div>
-                    </div>
-                    <div class="flex items-center justify-between p-3 bg-zinc-900/40 rounded-2xl border border-zinc-800/50">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-14 bg-zinc-800 rounded-lg overflow-hidden flex-shrink-0">
-                                <img src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&q=80&w=100" class="w-full h-full object-cover">
-                            </div>
-                            <div>
-                                <p class="text-sm font-bold">The Godfather</p>
-                                <p class="text-[10px] text-zinc-500">1.8k Reviews • Crime</p>
-                            </div>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-xs font-bold text-amber-500">9.2/10</p>
-                            <p class="text-[10px] text-zinc-400">Stable</p>
-                        </div>
-                    </div>
-                    <div class="flex items-center justify-between p-3 bg-zinc-900/40 rounded-2xl border border-zinc-800/50">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-14 bg-zinc-800 rounded-lg overflow-hidden flex-shrink-0">
-                                <img src="https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&q=80&w=100" class="w-full h-full object-cover">
-                            </div>
-                            <div>
-                                <p class="text-sm font-bold">Arcane</p>
-                                <p class="text-[10px] text-zinc-500">3.1k Reviews • Animation</p>
-                            </div>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-xs font-bold text-amber-500">9.0/10</p>
-                            <p class="text-[10px] text-green-500">+5% Trending</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
+    <!-- SECTION 3: RESPONSE & SENTIMENT -->
+    <div class="grid grid-cols-1 xl:grid-cols-2 gap-8 mb-10">
+        <div class="glass p-12 rounded-[4rem] flex flex-col items-center">
+            <h4 class="text-2xl font-black mb-10 w-full tracking-tight">Response Split</h4>
+            <div class="chart-box"><canvas id="canvas-doughnut"></canvas></div>
+            <div id="doughnutLegend" class="flex gap-6 mt-8"></div>
         </div>
-    </main>
+        <div class="glass p-12 rounded-[4rem]">
+            <h4 class="text-2xl font-black mb-10 tracking-tight">Critical Radar</h4>
+            <div class="radar-box flex items-center justify-center"><canvas id="canvas-radar"></canvas></div>
+        </div>
+    </div>
+
+    <!-- SECTION 4: REVIEWS & AUDIENCE -->
+    <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
+        <div class="xl:col-span-2 glass p-10 rounded-[3.5rem]">
+            <h4 class="text-2xl font-black mb-10 tracking-tight">Review Stream</h4>
+            <div id="reviewFeed" class="space-y-4"></div>
+        </div>
+        <div class="glass p-10 rounded-[3.5rem]">
+            <h4 class="text-2xl font-black mb-10 tracking-tight">Demographics</h4>
+            <div id="demoList" class="space-y-8"></div>
+        </div>
+    </div>
 
     <script>
-        // Initialize Lucide
-        lucide.createIcons();
-
-        // Chart Theme Defaults
-        Chart.defaults.color = '#71717a';
-        Chart.defaults.borderColor = 'rgba(39, 39, 42, 0.4)';
-        Chart.defaults.font.family = "'Inter', sans-serif";
-
-        // Activity Line Chart
-        const ctxActivity = document.getElementById('activityChart').getContext('2d');
-        new Chart(ctxActivity, {
-            type: 'line',
-            data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-                datasets: [{
-                    label: 'Reviews',
-                    data: [1200, 1900, 1500, 2500, 2200, 3100],
-                    borderColor: '#f59e0b',
-                    backgroundColor: 'rgba(245, 158, 11, 0.1)',
-                    fill: true,
-                    tension: 0.4,
-                    borderWidth: 3,
-                    pointRadius: 0,
-                    pointHoverRadius: 6
-                }, {
-                    label: 'Impressions',
-                    data: [800, 1200, 1000, 1800, 1600, 2200],
-                    borderColor: '#3f3f46',
-                    borderDash: [5, 5],
-                    tension: 0.4,
-                    borderWidth: 2,
-                    pointRadius: 0
-                }]
+        // MASTER DATASET - FULLY POPULATED
+        const HUB_DB = {
+            weekly: {
+                label: "Weekly",
+                stats: { reach: "12.4k", stream: "420k", rating: "4.8", revenue: "$8.2k" },
+                main: { labels: ['M','T','W','T','F','S','S'], data: [80, 150, 110, 240, 310, 420, 380], type: 'bar' },
+                doughnut: [70, 20, 10], // Pos, Neu, Neg
+                radar: [80, 95, 75, 85, 90],
+                trends: [{n:"Succession", s:9.9}, {n:"The Bear", s:9.5}, {n:"Fallout", s:9.3}],
+                demo: [{l:"Gen Z", p:42, c:"amber"}, {l:"Millennials", p:38, c:"purple"}, {l:"Other", p:20, c:"blue"}],
+                reviews: [
+                    {u: "Alex T.", m: "Succession", r: "The writing remains unmatched this week."},
+                    {u: "Sarah K.", m: "Fallout", r: "Visuals are 10/10, faithfully adapted."}
+                ]
             },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: {
-                    y: { grid: { borderDash: [2, 4] }, ticks: { stepSize: 1000 } },
-                    x: { grid: { display: false } }
-                }
+            biweekly: {
+                label: "Bi-Weekly",
+                stats: { reach: "28.5k", stream: "920k", rating: "4.6", revenue: "$24.8k" },
+                main: { labels: ['D1','D4','D8','D11','D14'], data: [420, 680, 510, 940, 1200], type: 'line', dash: [10, 5] },
+                doughnut: [65, 25, 10],
+                radar: [85, 85, 80, 95, 85],
+                trends: [{n:"Dune 2", s:9.7}, {n:"Ripley", s:8.8}, {n:"Shogun", s:9.4}],
+                demo: [{l:"Gen Z", p:45, c:"amber"}, {l:"Millennials", p:35, c:"purple"}, {l:"Other", p:20, c:"blue"}],
+                reviews: [
+                    {u: "James R.", m: "Dune 2", r: "A generational cinematic event."},
+                    {u: "Elena P.", m: "Shogun", r: "Masterful historical storytelling."}
+                ]
+            },
+            monthly: {
+                label: "Monthly",
+                stats: { reach: "48.5k", stream: "1.2M", rating: "4.6", revenue: "$42.1k" },
+                main: { labels: ['Week 1','Week 2','Week 3','Week 4'], data: [1200, 1950, 1400, 3100], type: 'line', tension: 0.4 },
+                doughnut: [75, 15, 10],
+                radar: [90, 85, 95, 80, 75],
+                trends: [{n:"Oppenheimer", s:9.8}, {n:"Poor Things", s:8.9}, {n:"Beef", s:8.7}],
+                demo: [{l:"Gen Z", p:48, c:"amber"}, {l:"Millennials", p:32, c:"purple"}, {l:"Other", p:20, c:"blue"}],
+                reviews: [
+                    {u: "Michael B.", m: "Oppenheimer", r: "The sound design is hauntingly good."},
+                    {u: "Nora V.", m: "Poor Things", r: "Unique, vibrant, and incredibly acted."}
+                ]
+            },
+            yearly: {
+                label: "Yearly",
+                stats: { reach: "540k", stream: "22.5M", rating: "4.9", revenue: "$1.4M" },
+                main: { labels: ['Q1','Q2','Q3','Q4'], data: [15000, 28000, 21000, 42000], type: 'line', stepped: true },
+                doughnut: [85, 10, 5],
+                radar: [95, 90, 90, 95, 95],
+                trends: [{n:"Avatar 2", s:8.8}, {n:"Spider-Verse", s:9.5}, {n:"Succession", s:9.9}],
+                demo: [{l:"Gen Z", p:50, c:"amber"}, {l:"Millennials", p:30, c:"purple"}, {l:"Other", p:20, c:"blue"}],
+                reviews: [
+                    {u: "Chris L.", m: "Succession", r: "The perfect ending to the perfect show."},
+                    {u: "Jessica H.", m: "Avatar", r: "Technical boundaries pushed once again."}
+                ]
             }
-        });
+        };
 
-        // Genre Doughnut/Pie Chart
-        const ctxGenre = document.getElementById('genreChart').getContext('2d');
-        new Chart(ctxGenre, {
-            type: 'doughnut',
-            data: {
-                labels: ['Action', 'Drama', 'Sci-Fi', 'Horror', 'Other'],
-                datasets: [{
-                    data: [35, 25, 20, 10, 10],
-                    backgroundColor: [
-                        '#f59e0b',
-                        '#3b82f6',
-                        '#a855f7',
-                        '#ef4444',
-                        '#27272a'
-                    ],
-                    borderWidth: 0,
-                    hoverOffset: 10
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                cutout: '75%',
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: { padding: 20, usePointStyle: true, boxWidth: 8 }
+        const chartStore = {};
+
+        function syncEverything(period) {
+            const d = HUB_DB[period];
+            document.getElementById('timeLabel').innerText = d.label;
+
+            // 1. Update Core Metric Cards
+            const sMap = { reach: 'Global Reach', stream: 'Watch Minutes', rating: 'Avg Rating', revenue: 'Ad Revenue' };
+            document.getElementById('statCards').innerHTML = Object.entries(d.stats).map(([k, v]) => `
+                <div class="glass p-8 rounded-[2.5rem] group hover:border-amber-400/40 transition-all duration-500">
+                    <p class="text-slate-500 text-[10px] font-extrabold uppercase tracking-[0.2em] mb-2">${sMap[k]}</p>
+                    <h3 class="text-4xl font-black group-hover:text-amber-400 transition-colors">${v}</h3>
+                </div>
+            `).join('');
+
+            // 2. Main momentum Chart (Bar/Line/Step)
+            drawChart('canvas-main', d.main.type, d.main.labels, d.main.data, { tension: d.main.tension, stepped: d.main.stepped, dash: d.main.dash });
+
+            // 3. Response Doughnut
+            drawChart('canvas-doughnut', 'doughnut', ['Pos', 'Neu', 'Neg'], d.doughnut, { colors: true });
+            
+            // 4. Critical Radar
+            drawChart('canvas-radar', 'radar', ['Story', 'Visuals', 'Cast', 'Audio', 'Directing'], d.radar);
+
+            // 5. Trending List
+            document.getElementById('vaultList').innerHTML = d.trends.map(m => `
+                <div class="flex items-center justify-between p-5 glass rounded-3xl border border-white/5 group hover:border-amber-400/30 transition-all cursor-pointer">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-2xl bg-amber-400/10 flex items-center justify-center text-amber-400 font-bold group-hover:rotate-12 transition-all">
+                            ${m.n.charAt(0)}
+                        </div>
+                        <p class="font-bold text-sm text-slate-200 group-hover:text-white">${m.n}</p>
+                    </div>
+                    <span class="text-xl font-black text-amber-400">${m.s}</span>
+                </div>
+            `).join('');
+
+            // 6. Demographics
+            document.getElementById('demoList').innerHTML = d.demo.map(item => `
+                <div>
+                    <div class="flex justify-between text-[10px] font-black uppercase mb-3 text-slate-500"><span>${item.l}</span><span>${item.p}%</span></div>
+                    <div class="w-full bg-white/5 h-2.5 rounded-full overflow-hidden shadow-inner">
+                        <div class="h-full bg-${item.c}-400 progress-bar shadow-[0_0_15px_rgba(251,191,36,0.3)]" style="width:${item.p}%"></div>
+                    </div>
+                </div>
+            `).join('');
+
+            // 7. Review Stream
+            document.getElementById('reviewFeed').innerHTML = d.reviews.map(rv => `
+                <div class="p-6 glass rounded-[2.5rem] border border-white/5 flex items-center justify-between group hover:bg-white/5 transition-all">
+                    <div>
+                        <p class="text-[10px] font-black text-amber-400 uppercase tracking-widest underline decoration-amber-400/20 mb-2">${rv.u} • ${rv.m}</p>
+                        <p class="text-sm text-slate-400 italic font-medium">"${rv.r}"</p>
+                    </div>
+                    <button class="p-3 bg-emerald-500/10 text-emerald-500 rounded-2xl hover:bg-emerald-500 hover:text-slate-900 transition-all"><i data-lucide="check-circle" class="w-5 h-5"></i></button>
+                </div>
+            `).join('');
+
+            lucide.createIcons();
+        }
+
+        function drawChart(id, type, labels, data, opt={}) {
+            const canvas = document.getElementById(id);
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            
+            if (chartStore[id]) chartStore[id].destroy();
+
+            const palette = ['#fbbf24', '#8b5cf6', '#3b82f6', '#10b981'];
+
+            chartStore[id] = new Chart(ctx, {
+                type: type,
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: data,
+                        backgroundColor: opt.colors ? palette : (type === 'radar' || type === 'line' ? 'rgba(251, 191, 36, 0.1)' : '#fbbf24'),
+                        borderColor: '#fbbf24',
+                        borderWidth: type === 'bar' ? 0 : 3,
+                        tension: opt.tension || 0,
+                        stepped: opt.stepped || false,
+                        borderDash: opt.dash || [],
+                        fill: true,
+                        pointRadius: type === 'line' ? 5 : 0,
+                        pointBackgroundColor: '#fbbf24'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: (['radar', 'doughnut'].includes(type)) ? { 
+                        r: { 
+                            grid: { color: 'rgba(255,255,255,0.05)' }, 
+                            angleLines: { color: 'rgba(255,255,255,0.05)' },
+                            pointLabels: { color: '#94a3b8', font: { weight: 'bold' } },
+                            ticks: { display: false } 
+                        } 
+                    } : {
+                        x: { grid: { display: false }, border: { display: false }, ticks: { color: '#64748b', font: { weight: 'bold' } } },
+                        y: { grid: { color: 'rgba(255,255,255,0.05)' }, border: { display: false }, ticks: { display: false } }
                     }
                 }
-            }
-        });
+            });
+        }
 
-        // Device Bar Chart
-        const ctxDevice = document.getElementById('deviceChart').getContext('2d');
-        new Chart(ctxDevice, {
-            type: 'bar',
-            data: {
-                labels: ['Mobile App', 'Web Desktop', 'Smart TV', 'Tablet'],
-                datasets: [{
-                    label: 'Active Users (k)',
-                    data: [28, 14, 8, 4],
-                    backgroundColor: '#f59e0b',
-                    borderRadius: 12,
-                    barThickness: 32
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: {
-                    y: { grid: { borderDash: [2, 4] } },
-                    x: { grid: { display: false } }
-                }
-            }
-        });
-
-        // Mobile Menu Toggle Logic
-        const menuBtn = document.getElementById('menuBtn');
-        const sidebar = document.getElementById('sidebar');
-        
-        menuBtn.addEventListener('click', (e) => {
-            sidebar.classList.toggle('-translate-x-full');
-            e.stopPropagation();
-        });
-
-        document.addEventListener('click', (e) => {
-            if (!sidebar.contains(e.target) && !menuBtn.contains(e.target)) {
-                sidebar.classList.add('-translate-x-full');
-            }
+        // Initialize App
+        window.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            syncEverything('monthly'); // Default to monthly on load
         });
     </script>
 </body>
